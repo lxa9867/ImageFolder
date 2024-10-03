@@ -1,4 +1,4 @@
-# ImageFolder🚀: Autoregressive Image Generation with Folded Tokens
+## ImageFolder🚀: Autoregressive Image Generation with Folded Tokens
 
 <div align="center">
 
@@ -13,30 +13,36 @@
 
 <p align="center">
 
-<p align="center">
-<img src="assets/teaser.png" width=95%>
+<div align=center>
+	<img src=assets/teaser.png/>
+</div>
 
-<p>
 
-
-# Updates 
+## Updates 
 - (2024.10.01) Repo created. Code and checkpoints will be released soon.
 
-# Generation
+## Generation
 
-<img src="assets/visualization.png" width=95%>
+<div align=center>
+	<img src=assets/visualization.png/>
+</div>
 
-# Visualization of Decomposed Token
+## Visualization of Decomposed Token
 
-<img src="assets/token-vis.png" width=95%>
+<div align=center>
+	<img src=assets/token-vis.png/>
+</div>
 
-# Citation
-if our work assists your research, feel free to give us a star ⭐ or cite us using
+## Citation
+If our work assists your research, feel free to give us a star ⭐ or cite us using
 ```
-@article{ImageFolder2024,
-  author = {Xiang Li and Hao Chen and Kai Qiu and Jason Kuen and Jiuxiang Gu and Bhiksha Raj and Zhe Lin},
-  title = {ImageFolder: Autoregressive Image Generation with Folded Tokens},
-  journal = {Arxiv},
-  year = {2024},
+@misc{li2024imagefolderautoregressiveimagegeneration,
+      title={ImageFolder: Autoregressive Image Generation with Folded Tokens}, 
+      author={Xiang Li and Hao Chen and Kai Qiu and Jason Kuen and Jiuxiang Gu and Bhiksha Raj and Zhe Lin},
+      year={2024},
+      eprint={2410.01756},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2410.01756}, 
 }
 ```
