@@ -3,7 +3,7 @@
 <div align="center">
 
 [![project page](https://img.shields.io/badge/ImageFolder%20project%20page-lightblue)](https://lxa9867.github.io/works/imagefolder/index.html)&nbsp;
-[![arXiv](https://img.shields.io/badge/arXiv%20paper-24xx.xxxxx-b31b1b.svg)](placeholder)&nbsp;
+[![arXiv](https://img.shields.io/badge/arXiv%20paper-2410.01756-b31b1b.svg)](https://arxiv.org/abs/2410.01756)&nbsp;
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)](placeholder)&nbsp;
 
 </div>
