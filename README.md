@@ -19,7 +19,22 @@
 
 
 ## Updates 
+- (2024.10.03) We are working on advanced training of ImageFolder tokenizer. The code and weights will be released after we finish advanced training.
 - (2024.10.01) Repo created. Code and checkpoints will be released soon.
+
+## Abaltion (updating)
+| ID  | Method                                              | Length | rFID ↓  |
+| --- | --------------------------------------------------- | ------ | ------- |
+| 🔶1   | Multi-scale residual quantization (Tian et al., 2024) | 680    | 1.92    |
+| 🔶2   | + Quantizer dropout                                  | 680    | 1.71    |
+| 🔶3   | + Smaller patch size K = 11                          | 265    | 3.24    |
+| 🔶4   | + Product quantization & Parallel decoding           | 265    | 2.06    |
+| 🔶5   | + Semantic regularization on all branches            | 265    | 1.97    |
+| 🔶6   | + Semantic regularization on one branch              | 265    | 1.57    |
+| 🔷7   | + Stronger discriminator             | 265    | 1.18    |
+
+🔶1-6 are already in the released paper, and after that 🔷7+ are advanced training settings.
+
 
 ## Generation
 
