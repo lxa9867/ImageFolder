@@ -23,15 +23,15 @@
 - (2024.10.01) Repo created. Code and checkpoints will be released soon.
 
 ## Ablation (updating)
-| ID  | Method                                              | Length | rFID ↓  | gFID ↓ |
-| --- | --------------------------------------------------- | ------ | ------- | ------- |
-| 🔶1   | Multi-scale residual quantization (Tian et al., 2024) | 680    | 1.92    | 7.52 |
-| 🔶2   | + Quantizer dropout                                  | 680    | 1.71    | 6.03 |
-| 🔶3   | + Smaller patch size K = 11                          | 265    | 3.24    | 6.56 | 
-| 🔶4   | + Product quantization & Parallel decoding           | 265    | 2.06    | 5.96 |
-| 🔶5   | + Semantic regularization on all branches            | 265    | 1.97    | 5.21 |
-| 🔶6   | + Semantic regularization on one branch              | 265    | 1.57    | 3.53 |
-| 🔷7   | + Stronger discriminator             | 265    | 1.18    | - |
+| ID  | Method                                              | Length | rFID ↓  | gFID ↓ | ACC ↑｜
+| --- | --------------------------------------------------- | ------ | ------- | ------- |------- |
+| 🔶1   | Multi-scale residual quantization (Tian et al., 2024) | 680    | 1.92    | 7.52 | - ｜
+| 🔶2   | + Quantizer dropout                                  | 680    | 1.71    | 6.03 | - ｜
+| 🔶3   | + Smaller patch size K = 11                          | 265    | 3.24    | 6.56 | - ｜
+| 🔶4   | + Product quantization & Parallel decoding           | 265    | 2.06    | 5.96 | - ｜
+| 🔶5   | + Semantic regularization on all branches            | 265    | 1.97    | 5.21 | - ｜
+| 🔶6   | + Semantic regularization on one branch              | 265    | 1.57    | 3.53 | 40.5 ｜
+| 🔷7   | + Stronger discriminator             | 265    | 1.04    | - | 50.2｜
 
 🔶1-6 are already in the released paper, and after that 🔷7+ are advanced training settings.
 
