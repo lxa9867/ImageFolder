@@ -32,6 +32,7 @@
 | 🔶5   | + Semantic regularization on all branches            | 265    | 1.97    | 5.21 | - |
 | 🔶6   | + Semantic regularization on one branch              | 265    | 1.57    | 3.53 | 40.5 |
 | 🔷7   | + Stronger discriminator             | 265    | 1.04    | - | 50.2|
+| 🔷8   | + Equilibrium enhancement    | 265    | 0.91    | - | -|
 
 🔶1-6 are already in the released paper, and after that 🔷7+ are advanced training settings.
 
