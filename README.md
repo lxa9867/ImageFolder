@@ -37,7 +37,7 @@
 | 🔷10   | + Long training    | -    | -    | - | - |
 | 🔷11   | + OpenImage    | -    | -    | - | - |
 
-🔶1-6 are already in the released paper, and after that 🔷7+ are advanced training settings used similar to VAR.
+🔶1-6 are already in the released paper, and after that 🔷7+ are advanced training settings used similar to VAR (gFID 3.30).
 
 
 ## Generation
@@ -53,7 +53,7 @@
 </div>
 
 ## Acknowledge
-We would also like to thank the following repositories: [LlamaGen](https://github.com/FoundationVision/LlamaGen), [VAR](https://github.com/FoundationVision/VAR) and [ControlVAR](https://github.com/lxa9867/ControlVAR).
+We would like to thank the following repositories: [LlamaGen](https://github.com/FoundationVision/LlamaGen), [VAR](https://github.com/FoundationVision/VAR) and [ControlVAR](https://github.com/lxa9867/ControlVAR).
 ## Citation
 If our work assists your research, feel free to give us a star ⭐ or cite us using
 ```
