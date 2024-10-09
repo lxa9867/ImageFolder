@@ -52,6 +52,8 @@
 	<img src=assets/token-vis.png/>
 </div>
 
+## Acknowledge
+We would also like to thank the following repositories: [LlamaGen](https://github.com/FoundationVision/LlamaGen), [VAR](https://github.com/FoundationVision/VAR) and [ControlVAR](https://github.com/lxa9867/ControlVAR).
 ## Citation
 If our work assists your research, feel free to give us a star ⭐ or cite us using
 ```
