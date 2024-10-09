@@ -37,7 +37,7 @@
 | 🔷10   | + Long training    | -    | -    | - | - |
 | 🔷11   | + OpenImage    | -    | -    | - | - |
 
-🔶1-6 are already in the released paper, and after that 🔷7+ are advanced training settings.
+🔶1-6 are already in the released paper, and after that 🔷7+ are advanced training settings used similar to VAR.
 
 
 ## Generation
