@@ -33,7 +33,7 @@
 | 🔶6   | + Semantic regularization on one branch              | 265    | 1.57    | 3.53 | 40.5 |
 | 🔷7   | + Stronger discriminator             | 265    | 1.04    | 2.94 | 50.2|
 | 🔷8   | + Equilibrium enhancement    | 265    | 0.80    | 2.67 | 50.8|
-| 🔷9   | + Parameter searching    | -    | -    | - | - |
+| 🔷9   | + Parameter searching    | 265    | 0.63   | - | - |
 | 🔷10   | + Long training    | -    | -    | - | - |
 
 🔶1-6 are already in the released paper, and after that 🔷7+ are advanced training settings used similar to VAR (gFID 3.30).
