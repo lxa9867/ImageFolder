@@ -32,7 +32,7 @@
 | 🔶5   | + Semantic regularization on all branches            | 265    | 1.97    | 5.21 | - |
 | 🔶6   | + Semantic regularization on one branch              | 265    | 1.57    | 3.53 | 40.5 |
 | 🔷7   | + Stronger discriminator             | 265    | 1.04    | 2.94 | 50.2|
-| 🔷8   | + Equilibrium enhancement    | 265    | 0.80    | 2.67 | 50.8|
+| 🔷8   | + Equilibrium enhancement    | 265    | 0.80    | 2.60 | 50.8|
 | 🔷9   | + Parameter searching    | 265    | 0.63   | - | - |
 | 🔷10   | + Long training    | -    | -    | - | - |
 
