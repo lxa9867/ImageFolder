@@ -67,19 +67,19 @@ We provide pre-trained tokenizers for image reconstruction on ImageNet, LAION-40
 
 | Training | Type | Codebook | Latent res. | rFID |                                 Link                                  | Config |
 | :------: | :--: | :-----------: | :---------: | :----: | :-------------------------------------------------------------------: | :----: |
-| ImageNet | VP2  |     4096      |   16x16    |  0.90  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/tree/main/vq-4096)  | VP2-4096.yaml |
-| ImageNet | VP2  |     16384     |   16x16    |  0.64  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/tree/main/vq-16384) | VP2-16384.yaml |
+| ImageNet | VP2  |     4096      |   16x16    |  0.90  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-4096/best_ckpt.pt?download=true)  | VP2-4096.yaml |
+| ImageNet | VP2  |     16384     |   16x16    |  0.64  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-16384/best_ckpt.pt?download=true) | VP2-16384.yaml |
 
 | Training |   Type   | Codebook | Latent res. | rFID |  Link  | Config |
 | :------: | :------: | :-----------: | :---------: | :----: | :----: | :----: |
-| ImageNet | MSBR10P2 |     4096      | 1x1->11x11  |  0.86  | coming | MSBR10P2-4096.yaml |
-| ImageNet | MSBR10P2 |     16384     | 1x1->11x11  |  0.78  | coming | MSBR10P2-16384.yaml |
+| ImageNet | MSBR10P2 |     4096      | 1x1->11x11  |  0.86  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSBR10P2-4096/best_ckpt.pt?download=true) | MSBR10P2-4096.yaml |
+| ImageNet | MSBR10P2 |     16384     | 1x1->11x11  |  0.78  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSBR10P2-16384/best_ckpt.pt?download=true) | MSBR10P2-16384.yaml |
 
 |  Training  |   Type   | Codebook | Latent res. | rFID |                                                  Link                                                  | Config |
 | :--------: | :------: | :-----------: | :---------: | :----: | :----------------------------------------------------------------------------------------------------: | :----: |
-|  ImageNet  | MSVR10P2 |     4096      | 1x1->11x11  |  0.80  | [Huggingface](https://huggingface.co/ang9867/imagefolder/resolve/main/imagenet-4096.pt?download=true)  | MSVR10P2-4096.yaml |
-|  ImageNet  | MSVR10P2 |     8192      | 1x1->11x11  |  0.70  | [Huggingface](https://huggingface.co/ang9867/imagefolder/resolve/main/imagenet-8192.pt?download=true)  | MSVR10P2-8192.yaml |
-|  ImageNet  | MSVR10P2 |     16384     | 1x1->11x11  |  0.67  | [Huggingface](https://huggingface.co/ang9867/imagefolder/resolve/main/imagenet-16384.pt?download=true) | MSVR10P2-16384.yaml |
+|  ImageNet  | MSVR10P2 |     4096      | 1x1->11x11  |  0.80  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-4096/best_ckpt.pt?download=true)  | MSVR10P2-4096.yaml |
+|  ImageNet  | MSVR10P2 |     8192      | 1x1->11x11  |  0.70  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-8192/best_ckpt.pt?download=true)  | MSVR10P2-8192.yaml |
+|  ImageNet  | MSVR10P2 |     16384     | 1x1->11x11  |  0.67  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-16384/best_ckpt.pt?download=true) | MSVR10P2-16384.yaml |
 |  IMed  | MSVR10P2 |     4096      | 1x1->11x11  |   -    |    [Huggingface](https://huggingface.co/ang9867/imagefolder/resolve/main/IMed361M.pt?download=true)    | MSVR10P2-4096.yaml |
 | LAION | MSVR10P2 |     4096      | 1x1->11x11  |   -    |                                                 coming                                                 | MSVR10P2-4096.yaml |
 
@@ -89,7 +89,7 @@ We provide a pre-trained generator for class-conditioned image generation using 
 
 | Type | Dataset  | Model Size | gFID |                                                   Link                                                    | Resolution |
 | :--: | :------: | :--------: | :----: | :-------------------------------------------------------------------------------------------------------: | :--------: |
-| VAR  | ImageNet |    362M    |  2.60  | [Huggingface](https://huggingface.co/ang9867/imagefolder/resolve/main/imagenet-var-4096.pt?download=true) |  256x256   |
+| VAR  | ImageNet |    362M    |  2.60  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/VAR-d17-MSVR10P2-4096/ar-ckpt-last.pth?download=true) |  256x256   |
 
 ## Installation
 
@@ -136,7 +136,7 @@ rFID will be automatically evaluated and reported on Wandb. The checkpoint with 
 Warning❗️: You may want to modify the metric to save models as rFID is not closely correlated to gFID. PSNR and SSIM are also good choices.
 
 ```
-torchrun --nproc_per_node=8 tokenizer/tokenizer_image/msvq_train.py --config configs/xxxx.yaml
+torchrun --nproc_per_node=8 tokenizer/tokenizer_image/xqgan_train.py --config configs/xxxx.yaml
 ```
 
 Please modify the configuration file as needed for your specific dataset. We list some important ones here.
@@ -212,16 +212,14 @@ We would like to thank the following repositories: [LlamaGen](https://github.com
 If our work assists your research, feel free to give us a star ⭐ or cite us using
 
 ```
-@misc{li2024imagefolderautoregressiveimagegeneration,
-      title={ImageFolder: Autoregressive Image Generation with Folded Tokens},
-      author={Xiang Li and Hao Chen and Kai Qiu and Jason Kuen and Jiuxiang Gu and Bhiksha Raj and Zhe Lin},
-      year={2024},
-      eprint={2410.01756},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2410.01756},
+@article{li2024imagefolder,
+  title={Imagefolder: Autoregressive image generation with folded tokens},
+  author={Li, Xiang and Qiu, Kai and Chen, Hao and Kuen, Jason and Gu, Jiuxiang and Raj, Bhiksha and Lin, Zhe},
+  journal={arXiv preprint arXiv:2410.01756},
+  year={2024}
 }
-
+```
+```
 @misc{li2024xqganopensourceimagetokenization,
       title={XQ-GAN: An Open-source Image Tokenization Framework for Autoregressive Generation}, 
       author={Xiang Li and Kai Qiu and Hao Chen and Jason Kuen and Jiuxiang Gu and Jindong Wang and Zhe Lin and Bhiksha Raj},
