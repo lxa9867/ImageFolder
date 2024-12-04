@@ -19,3 +19,4 @@ local_output*
 *.txt
 *.ipynb
 wandb
+output
