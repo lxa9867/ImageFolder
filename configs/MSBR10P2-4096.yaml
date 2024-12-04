@@ -36,8 +36,9 @@ disc_epoch_start: 64
 disc_type: dinodisc
 aug_fade_steps: 0
 disc_adaptive_weight: true
-cloud_save_path: output/exp-msvr10p2-4096
+cloud_save_path: output/exp-msbr10p2-4096
 clip_norm: True
 codebook_l2_norm: True
 soft_entropy: True
 scale: 1.0
+lfq: True

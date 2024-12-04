@@ -72,6 +72,7 @@ class VectorQuantizer2(nn.Module):
 
         with (torch.cuda.amp.autocast(enabled=False)):
             mean_vq_loss: torch.Tensor = 0.0
+            mean_commit_loss: torch.Tensor = 0.0
             vocab_hit_V = torch.zeros(self.vocab_size, dtype=torch.float, device=f_BChw.device)
             SN = len(self.v_patch_nums)
 
@@ -126,9 +127,9 @@ class VectorQuantizer2(nn.Module):
                     self.record_hit += 1
                 vocab_hit_V.add_(hit_V)
                 ratio = mask.sum() / B
-                print(F.mse_loss(f_hat.data, f_BChw, reduction="none").mul_(self.beta).mean())
-                mean_vq_loss += F.mse_loss(f_hat.data, f_BChw, reduction="none").mul_(self.beta).mul_(mask).mean() / ratio + \
-                                F.mse_loss(f_hat, f_no_grad, reduction="none").mul_(mask).mean() / ratio
+
+                mean_vq_loss += F.mse_loss(f_hat, f_no_grad, reduction="none").mul_(mask).mean() / ratio
+                mean_commit_loss += F.mse_loss(f_hat.data, f_BChw, reduction="none").mul_(mask).mul_(self.beta / ratio).mean()
 
             mean_vq_loss *= 1. / SN
             f_hat = (f_hat.data - f_no_grad).add_(f_BChw)
@@ -140,7 +141,7 @@ class VectorQuantizer2(nn.Module):
                       enumerate(self.v_patch_nums)]
         else:
             usages = None
-        return f_hat, usages, mean_vq_loss
+        return f_hat, usages, mean_vq_loss, mean_commit_loss, 0
 
     # ===================== `forward` is only used in VAE training =====================
 

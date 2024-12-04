@@ -80,8 +80,8 @@ We provide pre-trained tokenizers for image reconstruction on ImageNet, LAION-40
 |  ImageNet  | MSVR10P2 |     4096      | 1x1->11x11  |  0.80  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-4096/best_ckpt.pt?download=true)  | MSVR10P2-4096.yaml |
 |  ImageNet  | MSVR10P2 |     8192      | 1x1->11x11  |  0.70  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-8192/best_ckpt.pt?download=true)  | MSVR10P2-8192.yaml |
 |  ImageNet  | MSVR10P2 |     16384     | 1x1->11x11  |  0.67  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-16384/best_ckpt.pt?download=true) | MSVR10P2-16384.yaml |
-|  IMed  | MSVR10P2 |     4096      | 1x1->11x11  |   -    |    [Huggingface](https://huggingface.co/ang9867/imagefolder/resolve/main/IMed361M.pt?download=true)    | MSVR10P2-4096.yaml |
-| LAION | MSVR10P2 |     4096      | 1x1->11x11  |   -    |                                                 coming                                                 | MSVR10P2-4096.yaml |
+|  IMed  | MSVR10P2 |     4096      | 1x1->11x11  |   -    |    [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/IMed-MSVR10P2-4096/IMed361M.pt?download=true)    | MSVR10P2-4096.yaml |
+| LAION | MSVR10P2 |     4096      | 1x1->11x11  |   -    |     [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/LAION-MSVR10P2-4096/laion.pt?download=true) | MSVR10P2-4096.yaml |
 
 ---
 

@@ -19,8 +19,8 @@ project_root = os.path.abspath(os.path.join(current_dir, '../..'))
 sys.path.append(project_root)
 
 from quant import VectorQuantizer2
+from lookup_free_quantize import LFQ
 from tokenizer.tokenizer_image.dino_enc.dinov2 import DINOv2Encoder, DINOv2Decoder
-from tokenizer.tokenizer_image.sam import build_sam_vit_encoder_b
 from datasets import Denormalize
 from datasets import Normalize as ImgNormalize
 
@@ -62,6 +62,11 @@ class ModelArgs:
     guide_type_1: str = "class"
     guide_type_2: str = "class"
 
+    lfq: bool = False
+    scale: float = 1.0
+    soft_entropy: bool = True
+
+    dependency_loss_weight: float = 0.0
 
 class VQModel(nn.Module):
     def __init__(self, config: ModelArgs,):
@@ -116,22 +121,43 @@ class VQModel(nn.Module):
             if len(config.v_patch_nums) == 1:
                 self.quantizes = nn.ModuleList([VectorQuantizer(config.codebook_size, config.codebook_embed_dim, 
                                                                 config.commit_loss_beta, config.codebook_l2_norm) for _ in range(self.product_quant)])
-            else:
+            elif not config.lfq:
                 self.quantizes = nn.ModuleList([VectorQuantizer2(config.codebook_size, config.codebook_embed_dim,
                                                  v_patch_nums=config.v_patch_nums,
                                                  num_latent_tokens=config.num_latent_tokens // self.product_quant,
                                                  share_quant_resi=config.share_quant_resi,
                                                  codebook_drop=config.codebook_drop,) for _ in range(self.product_quant)])
+            else:
+                self.quantizes = nn.ModuleList([LFQ(config.codebook_size, config.codebook_embed_dim,
+                                                v_patch_nums=config.v_patch_nums,
+                                                num_latent_tokens=config.num_latent_tokens // self.product_quant,
+                                                share_quant_resi=config.share_quant_resi,
+                                                codebook_drop=config.codebook_drop,
+                                                using_znorm=config.codebook_l2_norm,
+                                                scale=config.scale,
+                                                entropy_weight=config.entropy_loss_ratio,
+                                                soft_entropy=config.soft_entropy,
+                                                ) for _ in range(self.product_quant)])
             self.post_quant_conv = nn.Conv2d(config.codebook_embed_dim * self.product_quant, self.decoder.embed_dim, 1)
         else:
             if len(config.v_patch_nums) == 1:
                 self.quantize = VectorQuantizer(config.codebook_size, config.codebook_embed_dim, config.commit_loss_beta, config.codebook_l2_norm)
-            else:
+            elif not config.lfq:
                 self.quantize = VectorQuantizer2(config.codebook_size, config.codebook_embed_dim,
                                                  v_patch_nums=config.v_patch_nums,
                                                  num_latent_tokens=config.num_latent_tokens,
                                                  share_quant_resi=config.share_quant_resi,
                                                  )
+            else:
+                self.quantize = LFQ(config.codebook_size, config.codebook_embed_dim,
+                                    v_patch_nums=config.v_patch_nums,
+                                    num_latent_tokens=config.num_latent_tokens,
+                                    share_quant_resi=config.share_quant_resi,
+                                    codebook_drop=config.codebook_drop,
+                                    using_znorm=config.codebook_l2_norm,
+                                    scale=config.scale,
+                                    entropy_weight=config.entropy_loss_ratio,
+                                    soft_entropy=config.soft_entropy)
 
         self.codebook_embed_dim = config.codebook_embed_dim
         self.v_patch_nums = config.v_patch_nums
@@ -193,6 +219,7 @@ class VQModel(nn.Module):
         
         self.guide_type_1 = config.guide_type_1
         self.guide_type_2 = config.guide_type_2
+        self.dependency_loss_weight = config.dependency_loss_weight
     
     def finetune(self, enc_tuning_method, dec_tuning_method):
         self.encoder.finetine(enc_tuning_method)
@@ -235,18 +262,24 @@ class VQModel(nn.Module):
 
         if self.product_quant > 1:
             h_list = h.chunk(chunks=self.product_quant, dim=2)
-            quant_list, usages_list, mean_vq_loss_list = [], [], []
+            quant_list, usages_list, mean_vq_loss_list, commit_loss_list, entropy_list = [], [], [], [], []
             for i, h in enumerate(h_list):
                 h = h.view(b, -1, int(sqrt(l // self.product_quant)), int(sqrt(l // self.product_quant)))
-                quant, usages, mean_vq_loss = self.quantizes[i].forward(h, ret_usages=True, dropout=dropout_rand)
+                quant, usages, vq_loss, commit_loss, entropy_loss = self.quantizes[i].forward(h, ret_usages=True, dropout=dropout_rand)
                 quant_list.append(quant)
                 usages_list.append(usages)
-                mean_vq_loss_list.append(mean_vq_loss)
+                mean_vq_loss_list.append(vq_loss)
+                commit_loss_list.append(commit_loss)
+                entropy_list.append(entropy_loss)
+            dependency_loss = self.dependency_loss_weight * orthogonal_cosine_loss(torch.mean(quant_list[0], dim=(2, 3)).contiguous(), torch.mean(quant_list[-1], dim=(2, 3)).contiguous())
             usages = [sum(us) / self.product_quant for us in zip(*usages_list)]
             mean_vq_loss = sum(mean_vq_loss_list) / self.product_quant
+            mean_commit_loss = sum(commit_loss_list) / self.product_quant
+            mean_entropy = sum(entropy_list) / self.product_quant
             quant = torch.cat(quant_list, dim=1)
         else:
-            quant, usages, mean_vq_loss = self.quantize.forward(h, ret_usages=True, dropout=dropout_rand)
+            dependency_loss = 0.0
+            quant, usages, mean_vq_loss, mean_commit_loss, mean_entropy = self.quantize.forward(h, ret_usages=True, dropout=dropout_rand)
 
         dec = self.decode(quant)
 
@@ -312,7 +345,7 @@ class VQModel(nn.Module):
         else:
             detail_loss = None
 
-        return dec, (mean_vq_loss, 0, 0, usages), sem_loss, detail_loss
+        return dec, (mean_vq_loss, mean_commit_loss, mean_entropy, usages), sem_loss, detail_loss, dependency_loss
 
     def img_to_reconstructed_img(self, x, last_one=True,) -> List[torch.Tensor]:
         h = self.encoder(x)
@@ -714,7 +747,8 @@ class VectorQuantizer(nn.Module):
 
 
         # compute loss
-        loss = self.beta * torch.mean((z_q.detach() - z) ** 2) + torch.mean((z_q - z.detach()) ** 2)
+        commit_loss = self.beta * torch.mean((z_q.detach() - z) ** 2)
+        vq_loss = torch.mean((z_q - z.detach()) ** 2)
 
         # preserve gradients - "straight-through"
         z_q = z + (z_q - z).detach()
@@ -722,7 +756,7 @@ class VectorQuantizer(nn.Module):
         # reshape back to match original input shape
         z_q = torch.einsum('b h w c -> b c h w', z_q)
 
-        return z_q, [codebook_usage], loss
+        return z_q, [codebook_usage], vq_loss, commit_loss, 0.0
     
     def f_to_idxBl_or_fhat(self, z: torch.Tensor, to_fhat: bool, v_patch_nums):  # z_BChw is the feature from inp_img_no_grad
         # reshape z -> (batch, height, width, channel) and flatten
@@ -756,6 +790,12 @@ class VectorQuantizer(nn.Module):
 
         return f_hat_or_idx_Bl
 
+
+def orthogonal_cosine_loss(A, B):
+    A_norm = A / A.norm(dim=1, keepdim=True)
+    B_norm = B / B.norm(dim=1, keepdim=True)
+    loss = (A_norm * B_norm).sum(dim=1).mean()
+    return loss
 
 #################################################################################
 #                              VQ Model Configs                                 #

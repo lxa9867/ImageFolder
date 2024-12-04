@@ -32,7 +32,6 @@ import numpy as np
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, '../..'))
-print("project root", project_root)
 sys.path.append(project_root)
 from utils.logger import create_logger
 from utils.distributed import init_distributed_mode
@@ -145,6 +144,7 @@ def parse_args():
     parser.add_argument("--debug_disc", type=bool, default=False)
     parser.add_argument("--guide_type_1", type=str, default='class', choices=["patch", "class"])
     parser.add_argument("--guide_type_2", type=str, default='class', choices=["patch", "class"])
+    parser.add_argument("--lfq", action='store_true', default=False, help="if use LFQ")
 
     args = parser.parse_args()
     if args.config is not None:
@@ -290,7 +290,8 @@ def main(args):
         sem_loss_scale=args.sem_loss_scale,
         detail_loss_scale=args.detail_loss_scale,
         guide_type_1=args.guide_type_1,
-        guide_type_2=args.guide_type_2
+        guide_type_2=args.guide_type_2,
+        lfq=args.lfq
     )
     logger.info(f"VQ Model Parameters: {sum(p.numel() for p in vq_model.parameters()):,}")
     if args.ema:
@@ -423,8 +424,8 @@ def main(args):
             # generator training
             optimizer.zero_grad()
             with torch.cuda.amp.autocast(dtype=ptdtype):  
-                recons_imgs, codebook_loss, sem_loss, detail_loss = vq_model(imgs, epoch)
-                loss_gen = vq_loss(codebook_loss, sem_loss, detail_loss, 0, imgs, recons_imgs, optimizer_idx=0, global_step=train_steps+1,
+                recons_imgs, codebook_loss, sem_loss, detail_loss, dependency_loss = vq_model(imgs, epoch)
+                loss_gen = vq_loss(codebook_loss, sem_loss, detail_loss, dependency_loss, imgs, recons_imgs, optimizer_idx=0, global_step=train_steps+1,
                                    last_layer=vq_model.module.decoder.last_layer, 
                                    logger=logger, log_every=args.log_every, fade_blur_schedule=fade_blur_schedule)
 
@@ -441,7 +442,7 @@ def main(args):
             optimizer_disc.zero_grad()
 
             with torch.cuda.amp.autocast(dtype=ptdtype):
-                loss_disc = vq_loss(codebook_loss, sem_loss, detail_loss, 0, imgs, recons_imgs, optimizer_idx=1, global_step=train_steps+1,
+                loss_disc = vq_loss(codebook_loss, sem_loss, detail_loss, dependency_loss, imgs, recons_imgs, optimizer_idx=1, global_step=train_steps+1,
                                     logger=logger, log_every=args.log_every, fade_blur_schedule=fade_blur_schedule)
             scaler_disc.scale(loss_disc).backward()
             if args.max_grad_norm != 0.0:
