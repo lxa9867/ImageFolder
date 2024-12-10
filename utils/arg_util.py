@@ -133,6 +133,7 @@ class Args(Tap):
     enc_type: str = 'dinov2'
     dec_type: str = 'dinov2'
     semantic_guide: str = 'dinov2'
+    detail_guide: str = 'none'
     num_latent_tokens: int = 256
     encoder_model: str = 'vit_small_patch14_dinov2.lvd142m'
     decoder_model: str = 'vit_small_patch14_dinov2.lvd142m'

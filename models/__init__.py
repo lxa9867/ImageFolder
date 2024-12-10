@@ -3,10 +3,12 @@ import torch.nn as nn
 
 from .quant import VectorQuantizer2
 from .var import VAR
-import sys
-sys.path.append('/home/xiangl/var')
+import sys, os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, '../'))
+sys.path.append(project_root)
 from .vqvae import VQVAE
-from tokenizer.tokenizer_image.msvq_model import VQ_models
+from tokenizer.tokenizer_image.xqgan_model import VQ_models
 
 
 def build_vae_var(
@@ -47,6 +49,7 @@ def build_vae_var(
         share_quant_resi=args.share_quant_resi,
         product_quant=args.product_quant,
         half_sem=args.half_sem,
+        detail_guide=args.detail_guide
     ).to(device)
     var_wo_ddp = VAR(
         vae_local=vae_local,

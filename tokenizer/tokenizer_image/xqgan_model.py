@@ -18,8 +18,8 @@ project_root = os.path.abspath(os.path.join(current_dir, '../..'))
 
 sys.path.append(project_root)
 
-from quant import VectorQuantizer2
-from lookup_free_quantize import LFQ
+from tokenizer.tokenizer_image.quant import VectorQuantizer2
+from tokenizer.tokenizer_image.lookup_free_quantize import LFQ
 from tokenizer.tokenizer_image.dino_enc.dinov2 import DINOv2Encoder, DINOv2Decoder
 from datasets import Denormalize
 from datasets import Normalize as ImgNormalize
@@ -67,6 +67,9 @@ class ModelArgs:
     soft_entropy: bool = True
 
     dependency_loss_weight: float = 0.0
+
+    test_model: bool = False
+
 
 class VQModel(nn.Module):
     def __init__(self, config: ModelArgs,):
@@ -116,7 +119,8 @@ class VQModel(nn.Module):
             )
             self.post_quant_conv = nn.Conv2d(config.codebook_embed_dim, self.decoder.embed_dim, 1)
 
-
+        self.V = self.vocab_size = config.codebook_size * self.product_quant
+        self.Cvae = config.codebook_embed_dim * self.product_quant
         if self.product_quant > 1:
             if len(config.v_patch_nums) == 1:
                 self.quantizes = nn.ModuleList([VectorQuantizer(config.codebook_size, config.codebook_embed_dim, 
@@ -220,6 +224,12 @@ class VQModel(nn.Module):
         self.guide_type_1 = config.guide_type_1
         self.guide_type_2 = config.guide_type_2
         self.dependency_loss_weight = config.dependency_loss_weight
+
+        self.test_mode = config.test_model
+
+        if self.test_mode:
+            self.eval()
+            [p.requires_grad_(False) for p in self.parameters()]
     
     def finetune(self, enc_tuning_method, dec_tuning_method):
         self.encoder.finetine(enc_tuning_method)
@@ -407,6 +417,31 @@ class VQModel(nn.Module):
 
         z_q = f_hats_list[-1][-1] # torch.mean(f_hats_list[-1][-1], dim=(2, 3)).contiguous()
         return z_q
+    
+    def fhat_to_img(self, f_hat: torch.Tensor):
+        f_hat = self.post_quant_conv(f_hat)
+        if self.dec_type == 'dinov2':
+            f_hat = f_hat.flatten(2).permute(0, 2, 1)
+        return self.decoder(f_hat).clamp_(-1, 1)
+    
+    def idxBl_to_var_input(self, gt_idx_Bl):
+        if self.product_quant > 1:
+            x_BLCv_wo_first_l_list = [self.quantizes[i].idxBl_to_var_input(gt_idx_Bl[i]) for i in range(self.product_quant)]
+            return torch.cat(x_BLCv_wo_first_l_list, dim=-1)
+        else:
+            return self.quantize.idxBl_to_var_input(gt_idx_Bl)
+    
+    def get_next_autoregressive_input(self, si, SN, f_hat, h_BChw):
+        f_hat_list = f_hat.chunk(self.product_quant, dim=1)
+        h_BChw_list = h_BChw.chunk(self.product_quant, dim=1)
+        out_fhat_list, out_next_token_map_list = [], []
+        for i, (f_hat, h_BChw) in enumerate(zip(f_hat_list, h_BChw_list)):
+            out_fhat, out_next_token_map = self.quantizes[i].get_next_autoregressive_input(si, SN, f_hat, h_BChw)
+            out_fhat_list.append(out_fhat)
+            out_next_token_map_list.append(out_next_token_map)
+        f_hat = torch.cat(out_fhat_list, dim=1)
+        next_token_map = torch.cat(out_next_token_map_list, dim=1)
+        return f_hat, next_token_map
 
 
 class Encoder(nn.Module):

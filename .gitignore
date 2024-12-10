@@ -20,3 +20,4 @@ local_output*
 *.ipynb
 wandb
 output
+*.npz

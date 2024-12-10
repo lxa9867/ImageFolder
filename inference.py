@@ -16,6 +16,8 @@ from utils.data_sampler import EvalDistributedSampler
 from PIL import Image
 from tqdm import tqdm
 import wandb
+from evaluator import Evaluator
+import tensorflow.compat.v1 as tf
 
 def create_npz_from_sample_folder(sample_dir, num=50000):
     """
@@ -44,8 +46,6 @@ def main(args):
     ckpt = torch.load(args.infer_ckpt, map_location='cpu')
     var_ckpt = ckpt['trainer']['var_wo_ddp']
     vae_ckpt = ckpt['trainer']['vae_local']
-    # build vae, var
-    patch_nums = (1, 2, 3, 4, 5, 6, 8, 10, 13, 16)
     # device = 'cuda' if torch.cuda.is_available() else 'cpu'
     vae, var = build_vae_var(
         V=4096, Cvae=32, ch=160, share_quant_resi=4,  # hard-coded VQVAE hyperparameters
@@ -96,8 +96,7 @@ def main(args):
     del dataset_val
     global_batch_size = args.bs
     total = 0
-    sample_folder_dir = f'/mnt/localssd/generation_cfg{args.cfg}_topk{args.top_k}_topp{args.top_p}'
-    os.makedirs(sample_folder_dir, exist_ok=True)
+    samples = []
     for step, (x, label) in enumerate(tqdm(ld_val, disable=(dist.get_rank() != 0))):
         label = label.to(args.device, non_blocking=True, dtype=torch.long)
         with torch.inference_mode():
@@ -105,18 +104,34 @@ def main(args):
                                 cache_enabled=True):  # using bfloat16 can be faster
                 gen_B3HW = var.autoregressive_infer_cfg(B=label.shape[0], label_B=label, cfg=cfg, top_k=top_k, top_p=args.top_p, g_seed=total + dist.get_rank(),
                                                       more_smooth=more_smooth, joint_sample=joint_sample)
-                # if dist.get_rank() == 0 and step % 10 == 0:
-                #     chw = torchvision.utils.make_grid(gen_B3HW, nrow=8, padding=0, pad_value=1.0)
-                #     wandb_tracker.log({"recon_images": [wandb.Image(chw)]},)
-                samples = torch.clamp(255 * gen_B3HW, 0, 255).permute(0, 2, 3, 1).to("cpu", dtype=torch.uint8).numpy()
-                for i, sample in enumerate(samples):
-                    index = i * dist.get_world_size() + dist.get_rank() + total
-                    Image.fromarray(sample).save(f"{sample_folder_dir}/{index:06d}.png")
-                total += global_batch_size
+                if dist.get_rank() == 0 and step % 10 == 0:
+                    chw = torchvision.utils.make_grid(gen_B3HW, nrow=8, padding=0, pad_value=1.0)
+                    wandb_tracker.log({"recon_images": [wandb.Image(chw)]},)
+                sample = torch.clamp(255 * gen_B3HW, 0, 255).permute(0, 2, 3, 1).to(dtype=torch.uint8).contiguous()
+                sample = dist.allgather(sample)
+
+            samples.append(sample.to("cpu", dtype=torch.uint8).numpy())
+            total += sample.shape[0]
 
     dist.barrier()
     if dist.get_rank() == 0:
-        create_npz_from_sample_folder(sample_folder_dir)
+        samples = np.concatenate(samples, axis=0)
+        np.random.shuffle(samples)
+        config = tf.ConfigProto(
+                allow_soft_placement=True  # allows DecodeJpeg to run on CPU in Inception graph
+        )
+        config.gpu_options.allow_growth = True
+        evaluator = Evaluator(tf.Session(config=config))
+        evaluator.warmup()
+        ref_acts = evaluator.read_activations('VIRTUAL_imagenet256_labeled.npz')
+        ref_stats, ref_stats_spatial = evaluator.read_statistics('VIRTUAL_imagenet256_labeled.npz', ref_acts)
+        sample_acts = evaluator.read_activations(samples)
+        sample_stats, sample_stats_spatial = evaluator.read_statistics(samples, sample_acts)
+        FID = sample_stats.frechet_distance(ref_stats)
+        IS = evaluator.compute_inception_score(sample_acts[0])
+        prec, recall = evaluator.compute_prec_recall(ref_acts[0], sample_acts[0])
+        print(f"cfg: {args.cfg} topk: {args.top_k} topp: {args.top_p} FID: {FID} IS: {IS} Precision: {prec} Recall: {recall}")
+    
     dist.barrier()
     print("Done")
         
@@ -124,11 +139,5 @@ def main(args):
 
 if __name__ == '__main__':
     args = arg_util.init_dist_and_get_args()
-    # for cfg in [1.5, 2.0, 2.5, 3, 3.5, 4]:
-    #     for topk in [1000, 900, 800, 700]:
-    #         for topp in [1.0, 0.95, 0.9]:
-    #             args.cfg=cfg
-    #             args.top_k=topk
-    #             args.top_p=topp
     print(args.cfg, args.top_k, args.top_p)
     main(args)
