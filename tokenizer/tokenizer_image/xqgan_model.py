@@ -290,6 +290,8 @@ class VQModel(nn.Module):
         else:
             dependency_loss = 0.0
             quant, usages, mean_vq_loss, mean_commit_loss, mean_entropy = self.quantize.forward(h, ret_usages=True, dropout=dropout_rand)
+            quant_list = [quant]
+
 
         dec = self.decode(quant)
 
