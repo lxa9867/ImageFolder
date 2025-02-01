@@ -384,7 +384,7 @@ class VQModel(nn.Module):
             f_hats = [self.post_quant_conv(torch.cat(f_hats, dim=1)) for f_hats in zip(*f_hats_list)]
         else:
             if len(self.v_patch_nums) == 1:
-                ls_f_hat_BChw = self.quantizes[i].f_to_idxBl_or_fhat(f, to_fhat=True)
+                ls_f_hat_BChw = self.quantize.f_to_idxBl_or_fhat(f, to_fhat=True, v_patch_nums=None)
             else:
                 ls_f_hat_BChw = self.quantize.f_to_idxBl_or_fhat(f, to_fhat=True, v_patch_nums=self.v_patch_nums)
             f_hats = [self.post_quant_conv(f_hat) for f_hat in ls_f_hat_BChw]
@@ -849,3 +849,4 @@ if __name__ == '__main__':
     semantic_model = create_model('vit_small_patch14_dinov2.lvd142m', pretrained=True, img_size=256, patch_size=16,
                                   drop_path_rate=0.0)
     semantic_model.eval()
+
