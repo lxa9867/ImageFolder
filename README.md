@@ -67,9 +67,9 @@ We provide pre-trained tokenizers for image reconstruction on ImageNet, LAION-40
 
 | Training | Type | Codebook | Latent res. | rFID |                                 Link                                  | Config |
 | :------: | :--: | :-----------: | :---------: | :----: | :-------------------------------------------------------------------: | :----: |
-| ImageNet | VP  |     1024      |   16x16    |  1.76  | coming  | coming |
-| ImageNet | VP  |     4096      |   16x16    |  0.91  | coming  | coming |
-| ImageNet | VP  |     8192      |   16x16    |  0.81  | coming  | coming |
+| ImageNet | VP  |     1024      |   16x16    |  1.76  | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
+| ImageNet | VP  |     4096      |   16x16    |  0.91  | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
+| ImageNet | VP  |     8192      |   16x16    |  0.81  | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
 | ImageNet | VP2  |     4096      |   16x16    |  0.90  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-4096/best_ckpt.pt?download=true)  | VP2-4096.yaml |
 | ImageNet | VP2  |     16384     |   16x16    |  0.64  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-16384/best_ckpt.pt?download=true) | VP2-16384.yaml |
 
