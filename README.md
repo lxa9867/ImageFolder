@@ -1,38 +1,58 @@
-## XQ-GAN🚀: An Open-source Image Tokenization Framework for Autoregressive Generation
+## Contents
 
-<div align="center">
+<details>
+  <summary>Robust Latent Matters: Boosting Image Generation with Sampling Error Synthesis
+  <div align="center">
 
-[![arXiv](https://img.shields.io/badge/arXiv%20paper-2410.01756-b31b1b.svg)](https://arxiv.org/abs/2412.01762)&nbsp;
+[![arXiv](https://img.shields.io/badge/arXiv%20paper-2503.xxxxx-b31b1b.svg)]()&nbsp;
+[![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)]()&nbsp;
+
+</div>
+  </summary>
+ <p align="center">
+
+<div align=center>
+	<img src=assets/robusttok.png/>
+</div>
+
+</details>
+
+<details>
+  <summary>XQ-GAN🚀: An Open-source Image Tokenization Framework for Autoregressive Generation
+  <div align="center">
+
+[![arXiv](https://img.shields.io/badge/arXiv%20paper-2412.01762-b31b1b.svg)](https://arxiv.org/abs/2412.01762)&nbsp;
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)](https://huggingface.co/qiuk6/XQ-GAN/tree/main)&nbsp;
 
 </div>
-<!-- <p align="center" style="font-size: larger;">
-  <a href="placeholder">🔥ImageFolder: Autoregressive Image Generation with Folded Tokens</a>
-</p> -->
-
-<p align="center">
+  </summary>
+ <p align="center">
 
 <div align=center>
 	<img src=assets/xqgan.png/>
 </div>
 
-## ImageFolder🚀: Autoregressive Image Generation with Folded Tokens
+</details>
 
-<div align="center">
+<details>
+  <summary>ImageFolder🚀: Autoregressive Image Generation with Folded Tokens
+  <div align="center">
 
 [![project page](https://img.shields.io/badge/ImageFolder%20project%20page-lightblue)](https://lxa9867.github.io/works/imagefolder/index.html)&nbsp;
 [![arXiv](https://img.shields.io/badge/arXiv%20paper-2410.01756-b31b1b.svg)](https://arxiv.org/abs/2410.01756)&nbsp;
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)](https://huggingface.co/ang9867/imagefolder/tree/main)&nbsp;
 </div>
-
-<p align="center">
+  </summary>
+ <p align="center">
 
 <div align=center>
 	<img src=assets/teaser.png/>
 </div>
 
+</details>
 
 ## Updates
+- (2025.03,11) RobustTok will be released soon.
 - (2025.01.22) ImageFolder got accepted to ICLR 2025.
 - (2024.12.03) XQ-GAN initial code released. ImageFolder is compatible in XQ-GAN.
 - (2024.12.02) ImageFolder's code has been released officially at [Adobe Research Repo](https://github.com/adobe-research/ImageFolder).
