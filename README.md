@@ -61,12 +61,12 @@
 
 🚨🚨🚨 New (2025.03): We are supporting latent perturbation + pFID evaluation proposed in RobustTok!
 ```
-# Plug and play perturbation to help your tokennizer latent robustness
+# Plug and play perturbation to improve your tokenizer‘s latent robustness
 import latent_perturbation as LP
 
 # Dummy quantization implementation
 class quantizer():
-    def __init__(x):
+    def __init__():
         self.enc = Encoder()
         self.dec = Decoder()
         self.quant = Quantizer()
@@ -76,7 +76,8 @@ class quantizer():
         x = self.quant(x)
         #-----------------------------#
         # This is all you need to add!
-        x = LP.add_perturb(x, codebook=self.codebook, alpha=0.5, beta=0.1, delta=100) 
+	# alpha: perturbation rate. beta: perturbation proportion. delta: perturbation strength.
+        x = LP.add_perturb(x, codebook=self.codebook, alpha=0.5, beta=0.1, delta=100)
         #-----------------------------#
         x = self.dec(x)
         return x
