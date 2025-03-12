@@ -52,32 +52,63 @@
 </details>
 
 ## Updates
-- (2025.03,11) RobustTok will be released soon.
+- (2025.03.11) RobustTok will be released soon.
 - (2025.01.22) ImageFolder got accepted to ICLR 2025.
 - (2024.12.03) XQ-GAN initial code released. ImageFolder is compatible in XQ-GAN.
 - (2024.12.02) ImageFolder's code has been released officially at [Adobe Research Repo](https://github.com/adobe-research/ImageFolder).
 
 ## Features
 
+🚨🚨🚨 New (2025.03): We are supporting latent perturbation + pFID evaluation proposed in RobustTok!
+```
+# Plug and play perturbation to help your tokennizer latent robustness
+import latent_perturbation as LP
+
+# Dummy quantization implementation
+class quantizer():
+    def __init__(x):
+        self.enc = Encoder()
+        self.dec = Decoder()
+        self.quant = Quantizer()
+        self.codebook = self.quant.codebook
+    def quantize(x):
+        x = self.enc(x)
+        x = self.quant(x)
+        #-----------------------------#
+        # This is all you need to add!
+        x = LP.add_perturb(x, codebook=self.codebook, alpha=0.5, beta=0.1, delta=100) 
+        #-----------------------------#
+        x = self.dec(x)
+        return x
+```
+
 <p align="center">
+
+<details>
+  <summary>Basic features of the highly flexible quantization framework
+  <div align="center">
+
+</div>
+  </summary>
 
 <div align=center>
 	<img src=assets/table.png/>
 </div>
 
 XQ-GAN is a highly flexible framework that supports the combination of several advanced quantization approaches, backbone architectures, and training recipes (semantic alignment, discriminators, and auxiliary losses). In addition, we also provide finetuning support with full, LORA, and frozen from pre-trained weights.
-
 <p align="center">
 
 <div align=center>
 	<img src=assets/quantizer.png  width="500" />
 </div>
-
 We implemented a hierarchical quantization approach, which first decides the product quantization (PQ) and then the residual quantization (RQ). The minimum unit of this design consists of vector quantization (VQ), lookup-free quantization (LFQ), and binary spherical quantization (BSQ). A vanilla VQ can be achieved in this framework by setting the product branch and residual depth to 1.
+
+
+</details>
 
 ## Model Zoo
 
-We provide pre-trained tokenizers for image reconstruction on ImageNet, LAION-400M (natural image), and IMed361M (multimodal medical image) 256x256 resolution.
+We provide pre-trained tokenizers for image reconstruction on ImageNet, LAION-400M (natural image), and IMed361M (multimodal medical image) 256x256 resolution. V: Vector quantization. B: Binary Spherical Quantization. P: Product quantization. R: Residual quantization. MS: Multi-scale. LP: Latent Perturbation. The type is arranged as MS-{V,B}-{R}-{P}-LP.
 
 <p align="center">
 
@@ -85,34 +116,37 @@ We provide pre-trained tokenizers for image reconstruction on ImageNet, LAION-40
 	<img src=assets/data.png/>
 </div>
 
-| Training | Type | Codebook | Latent res. | rFID |                                 Link                                  | Config |
-| :------: | :--: | :-----------: | :---------: | :----: | :-------------------------------------------------------------------: | :----: |
-| ImageNet | VP  |     1024      |   16x16    |  1.76  | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
-| ImageNet | VP  |     4096      |   16x16    |  0.91  | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
-| ImageNet | VP  |     8192      |   16x16    |  0.81  | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
-| ImageNet | VP2  |     4096      |   16x16    |  0.90  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-4096/best_ckpt.pt?download=true)  | VP2-4096.yaml |
-| ImageNet | VP2  |     16384     |   16x16    |  0.64  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-16384/best_ckpt.pt?download=true) | VP2-16384.yaml |
+| Training | Type | Codebook | Latent res. | rFID | pFID |                                 Link                                  | Config |
+| :------: | :--: | :-----------: | :---------: | :----: | :----: |:-------------------------------------------------------------------: | :----: |
+| ImageNet | V  |     1024      |   16x16    |  1.76  | - | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
+| ImageNet | V  |     4096      |   16x16    |  0.91  | 6.98 | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
+| ImageNet | V  |     8192      |   16x16    |  0.81  | 7.91 | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
+| ImageNet | VP+LP |     4096      |   16x16    |  1.02  | 2.28 | [Huggingface]()  | coming |
+| ImageNet | VP2  |     4096      |   16x16    |  0.90  | - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-4096/best_ckpt.pt?download=true)  | VP2-4096.yaml |
+| ImageNet | VP2  |     16384     |   16x16    |  0.64  | - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-16384/best_ckpt.pt?download=true) | VP2-16384.yaml |
 
-| Training |   Type   | Codebook | Latent res. | rFID |  Link  | Config |
-| :------: | :------: | :-----------: | :---------: | :----: | :----: | :----: |
-| ImageNet | MSBR10P2 |     4096      | 1x1->11x11  |  0.86  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSBR10P2-4096/best_ckpt.pt?download=true) | MSBR10P2-4096.yaml |
-| ImageNet | MSBR10P2 |     16384     | 1x1->11x11  |  0.78  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSBR10P2-16384/best_ckpt.pt?download=true) | MSBR10P2-16384.yaml |
+| Training |   Type   | Codebook | Latent res. | rFID | pFID|  Link  | Config |
+| :------: | :------: | :-----------: | :---------: | :----: | :----: |:----: | :----: |
+| ImageNet | MSBR10P2 |     4096      | 1x1->11x11  |  0.86  | - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSBR10P2-4096/best_ckpt.pt?download=true) | MSBR10P2-4096.yaml |
+| ImageNet | MSBR10P2 |     16384     | 1x1->11x11  |  0.78  | - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSBR10P2-16384/best_ckpt.pt?download=true) | MSBR10P2-16384.yaml |
 
-|  Training  |   Type   | Codebook | Latent res. | rFID |                                                  Link                                                  | Config |
-| :--------: | :------: | :-----------: | :---------: | :----: | :----------------------------------------------------------------------------------------------------: | :----: |
-|  ImageNet  | MSVR10P2 |     4096      | 1x1->11x11  |  0.80  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-4096/best_ckpt.pt?download=true)  | MSVR10P2-4096.yaml |
-|  ImageNet  | MSVR10P2 |     8192      | 1x1->11x11  |  0.70  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-8192/best_ckpt.pt?download=true)  | MSVR10P2-8192.yaml |
-|  ImageNet  | MSVR10P2 |     16384     | 1x1->11x11  |  0.67  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-16384/best_ckpt.pt?download=true) | MSVR10P2-16384.yaml |
-|  IMed  | MSVR10P2 |     4096      | 1x1->11x11  |   -    |    [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/IMed-MSVR10P2-4096/IMed361M.pt?download=true)    | MSVR10P2-4096.yaml |
-| LAION | MSVR10P2 |     4096      | 1x1->11x11  |   -    |     [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/LAION-MSVR10P2-4096/laion.pt?download=true) | MSVR10P2-4096.yaml |
+|  Training  |   Type   | Codebook | Latent res. | rFID |  pFID |                                                Link                                                  | Config |
+| :--------: | :------: | :-----------: | :---------: | :----: | :----: |:----------------------------------------------------------------------------------------------------: | :----: |
+|  ImageNet  | MSVR10P2 |     4096      | 1x1->11x11  |  0.80  | 7.23 | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-4096/best_ckpt.pt?download=true)  | MSVR10P2-4096.yaml |
+|  ImageNet  | MSVR10P2 |     8192      | 1x1->11x11  |  0.70  | - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-8192/best_ckpt.pt?download=true)  | MSVR10P2-8192.yaml |
+|  ImageNet  | MSVR10P2 |     16384     | 1x1->11x11  |  0.67  | - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/MSVR10P2-16384/best_ckpt.pt?download=true) | MSVR10P2-16384.yaml |
+|  IMed  | MSVR10P2 |     4096      | 1x1->11x11  |   -    |    - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/IMed-MSVR10P2-4096/IMed361M.pt?download=true)    | MSVR10P2-4096.yaml |
+| LAION | MSVR10P2 |     4096      | 1x1->11x11  |   -    |     - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/LAION-MSVR10P2-4096/laion.pt?download=true) | MSVR10P2-4096.yaml |
 
 ---
 
-We provide a pre-trained generator for class-conditioned image generation using MSVR10P2 ([ImgaeFolder's setting](https://arxiv.org/abs/2410.01756)) on ImageNet 256x256 resolution. More support will be made soon.
+We provide a pre-trained generators for class-conditioned image generation using MSVR10P2 ([ImgaeFolder's setting](https://arxiv.org/abs/2410.01756)) and VP+Latent Perturb (LP) on ImageNet 256x256 resolution. 
 
-| Type | Dataset  | Model Size | gFID |                                                   Link                                                    | Resolution |
-| :--: | :------: | :--------: | :----: | :-------------------------------------------------------------------------------------------------------: | :--------: |
-| VAR  | ImageNet |    362M    |  2.60  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/VAR-d17-MSVR10P2-4096/ar-ckpt-last.pth?download=true) |  256x256   |
+| Generator Type | Tokenizer  | Model Size | gFID |                                                   Link                                                    | 
+| :--: | :------: | :--------: | :----: | :-------------------------------------------------------------------------------------------------------: | 
+| VAR  | MSVR10P2 |    362M    |  2.60  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/VAR-d17-MSVR10P2-4096/ar-ckpt-last.pth?download=true) |  
+| RAR | VP+LP | 261M | 1.83 | [Huggingface]() | 
+| RAR | VP+LP | 461M | 1.60 | [Huggingface]() | 
 
 ## Installation
 
