@@ -52,7 +52,7 @@
 </details>
 
 ## Updates
-- (2025.03.12) RobustTok initial code released, Genearator code and checkpoint will release shortly.
+- (2025.03.12) RobustTok initial code released. Genearators and checkpoints will be released shortly.
 - (2025.01.22) ImageFolder got accepted to ICLR 2025.
 - (2024.12.03) XQ-GAN initial code released. ImageFolder is compatible in XQ-GAN.
 - (2024.12.02) ImageFolder's code has been released officially at [Adobe Research Repo](https://github.com/adobe-research/ImageFolder).
