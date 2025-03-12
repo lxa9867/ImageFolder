@@ -4,7 +4,7 @@
   <summary>Robust Latent Matters: Boosting Image Generation with Sampling Error Synthesis
   <div align="center">
 
-[![arXiv](https://img.shields.io/badge/arXiv%20paper-2503.xxxxx-b31b1b.svg)]()&nbsp;
+[![arXiv](https://img.shields.io/badge/arXiv%20paper-2503.08354-b31b1b.svg)](https://arxiv.org/pdf/2503.08354)&nbsp;
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)]()&nbsp;
 
 </div>
