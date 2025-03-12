@@ -52,7 +52,7 @@
 </details>
 
 ## Updates
-- (2025.03.11) RobustTok will be released soon.
+- (2025.03.12) RobustTok initial code released, Genearator code and checkpoint will release shortly.
 - (2025.01.22) ImageFolder got accepted to ICLR 2025.
 - (2024.12.03) XQ-GAN initial code released. ImageFolder is compatible in XQ-GAN.
 - (2024.12.02) ImageFolder's code has been released officially at [Adobe Research Repo](https://github.com/adobe-research/ImageFolder).
@@ -77,7 +77,7 @@ class quantizer():
         #-----------------------------#
         # This is all you need to add!
 	# alpha: perturbation rate. beta: perturbation proportion. delta: perturbation strength.
-        x = LP.add_perturb(x, codebook=self.codebook, alpha=0.5, beta=0.1, delta=100)
+        x = LP.add_perturb(x, z_channels=self.z_channels, codebook_norm = self.codebook_norm , codebook=self.codebook, alpha=0.5, beta=0.1, delta=100)
         #-----------------------------#
         x = self.dec(x)
         return x
@@ -119,10 +119,9 @@ We provide pre-trained tokenizers for image reconstruction on ImageNet, LAION-40
 
 | Training | Type | Codebook | Latent res. | rFID | pFID |                                 Link                                  | Config |
 | :------: | :--: | :-----------: | :---------: | :----: | :----: |:-------------------------------------------------------------------: | :----: |
-| ImageNet | V  |     1024      |   16x16    |  1.76  | - | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
-| ImageNet | V  |     4096      |   16x16    |  0.91  | 6.98 | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
-| ImageNet | V  |     8192      |   16x16    |  0.81  | 7.91 | [Huggingface](https://huggingface.co/qiuk6/XQGAN/resolve/main/XQGAN-8192/best_ckpt.pt?download=true)  | coming |
-| ImageNet | VP+LP |     4096      |   16x16    |  1.02  | 2.28 | [Huggingface]()  | coming |
+| ImageNet | V  |     4096      |   16x16    |  0.91  | 6.98 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/XQGAN-4096.pt?download=true)  | coming |
+| ImageNet | V  |     8192      |   16x16    |  0.81  | 7.91 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/XQGAN-8192.pt?download=true)  | coming |
+| ImageNet | VP+LP |     4096      |   16x16    |  1.02  | 2.28 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/RobustTok-zero.pt?download=true)  | coming |
 | ImageNet | VP2  |     4096      |   16x16    |  0.90  | - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-4096/best_ckpt.pt?download=true)  | VP2-4096.yaml |
 | ImageNet | VP2  |     16384     |   16x16    |  0.64  | - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-16384/best_ckpt.pt?download=true) | VP2-16384.yaml |
 
@@ -293,5 +292,16 @@ If our work assists your research, feel free to give us a star ⭐ or cite us us
       archivePrefix={arXiv},
       primaryClass={cs.CV},
       url={https://arxiv.org/abs/2412.01762}, 
+}
+```
+```
+@misc{qiu2025robustlatentmattersboosting,
+      title={Robust Latent Matters: Boosting Image Generation with Sampling Error}, 
+      author={Kai Qiu and Xiang Li and Jason Kuen and Hao Chen and Xiaohao Xu and Jiuxiang Gu and Yinyi Luo and Bhiksha Raj and Zhe Lin and Marios Savvides},
+      year={2025},
+      eprint={2503.08354},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2503.08354}, 
 }
 ```

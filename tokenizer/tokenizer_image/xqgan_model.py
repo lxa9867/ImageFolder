@@ -21,6 +21,7 @@ sys.path.append(project_root)
 from tokenizer.tokenizer_image.quant import VectorQuantizer2
 from tokenizer.tokenizer_image.lookup_free_quantize import LFQ
 from tokenizer.tokenizer_image.dino_enc.dinov2 import DINOv2Encoder, DINOv2Decoder
+from tokenizer.tokenizer_image.latent_perturbation import add_perturbation
 from datasets import Denormalize
 from datasets import Normalize as ImgNormalize
 
@@ -194,8 +195,10 @@ class VQModel(nn.Module):
                 world_size=world_size,
                 use_horovod=use_horovod,
             )
-            if not self.half_sem:
+            if not self.half_sem and self.product_quant > 1:
                 self.sem_linear = nn.Conv2d(self.product_quant * config.codebook_embed_dim, config.codebook_embed_dim, 1)
+            elif self.half_sem and self.product_quant == 1:
+                self.sem_linear = nn.Conv2d(768, config.codebook_embed_dim//2, 1)
             if self.enc_type == 'cnn':
                 self.sem_linear = torch.nn.Linear(384, config.codebook_embed_dim)
 
@@ -262,7 +265,7 @@ class VQModel(nn.Module):
         dec = self.decode(quant_b)
         return dec
 
-    def forward(self, input, epoch):
+    def forward(self, input, epoch, alpha, beta, delta):
         h = self.encode(input)
         b, c, l, _ = h.shape
         if len(self.v_patch_nums) == 1:
@@ -290,6 +293,8 @@ class VQModel(nn.Module):
         else:
             dependency_loss = 0.0
             quant, usages, mean_vq_loss, mean_commit_loss, mean_entropy = self.quantize.forward(h, ret_usages=True, dropout=dropout_rand)
+            print(alpha, beta, delta)
+            quant = add_perturbation(h, quant, self.quantize.z_channels, self.quantize.codebook_norm, self.quantize.embedding, alpha, beta, delta)
             quant_list = [quant]
 
 
@@ -346,7 +351,7 @@ class VQModel(nn.Module):
             n_drop = int(b * self.codebook_drop)
             with (torch.cuda.amp.autocast(enabled=False)):
                 detail_loss_scale = self.detail_loss_scale
-                feat1 = z_s[n_drop:].float()
+                feat1 = z_d[n_drop:].float()
                 feat2 = z_q_[n_drop:].float()
                 if self.clip_norm:
                     feat1 = feat1 / feat1.norm(dim=1, keepdim=True)

@@ -58,6 +58,16 @@ import wandb
 #################################################################################
 #                                  Training Loop                                #
 #################################################################################
+
+def get_random_ratio(randomness_anneal_start, randomness_anneal_end, end_ratio, cur_step):
+    if cur_step < randomness_anneal_start:
+        return 1.0
+    elif cur_step > randomness_anneal_end:
+        return end_ratio
+    else:
+        return 1.0 - (cur_step - randomness_anneal_start) / (randomness_anneal_end - randomness_anneal_start) * end_ratio
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-path", type=str, default='/mnt/localssd/ImageNet2012/train')
@@ -145,6 +155,14 @@ def parse_args():
     parser.add_argument("--guide_type_1", type=str, default='class', choices=["patch", "class"])
     parser.add_argument("--guide_type_2", type=str, default='class', choices=["patch", "class"])
     parser.add_argument("--lfq", action='store_true', default=False, help="if use LFQ")
+
+    parser.add_argument("--end-ratio", type=float, default=0.5)
+    parser.add_argument("--anneal-start", type=int, default=200)
+    parser.add_argument("--anneal-end", type=int, default=200)
+    
+    parser.add_argument("--alpha", type=float, default=0.0)
+    parser.add_argument("--beta", type=float, default=0.0)
+    parser.add_argument("--delta", type=int, default=100)
 
     args = parser.parse_args()
     if args.config is not None:
@@ -408,6 +426,11 @@ def main(args):
 
     logger.info(f"Training for {args.epochs} epochs...")
     for epoch in range(start_epoch, args.epochs):
+        ratio = get_random_ratio(args.anneal_start, args.anneal_end, args.end_ratio, epoch)
+        delta = int(ratio * args.delta)
+        alpha = ratio * args.alpha
+        beta = args.beta
+
         sampler.set_epoch(epoch)
         logger.info(f"Beginning epoch {epoch}...")
         if args.disc_reinit != 0:
@@ -424,7 +447,7 @@ def main(args):
             # generator training
             optimizer.zero_grad()
             with torch.cuda.amp.autocast(dtype=ptdtype):  
-                recons_imgs, codebook_loss, sem_loss, detail_loss, dependency_loss = vq_model(imgs, epoch)
+                recons_imgs, codebook_loss, sem_loss, detail_loss, dependency_loss = vq_model(imgs, epoch, alpha, beta, delta)
                 loss_gen = vq_loss(codebook_loss, sem_loss, detail_loss, dependency_loss, imgs, recons_imgs, optimizer_idx=0, global_step=train_steps+1,
                                    last_layer=vq_model.module.decoder.last_layer, 
                                    logger=logger, log_every=args.log_every, fade_blur_schedule=fade_blur_schedule)
