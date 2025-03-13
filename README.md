@@ -50,7 +50,7 @@
 </div>
 
 ## Updates
-- (2025.03.12) RobustTok initial code released. Generators and checkpoints will be released shortly.
+- (2025.03.13) RobustTok initial code released.
 - (2025.01.22) ImageFolder got accepted to ICLR 2025.
 - (2024.12.03) XQ-GAN initial code released. ImageFolder is compatible in XQ-GAN.
 - (2024.12.02) ImageFolder's code has been released officially at [Adobe Research Repo](https://github.com/adobe-research/ImageFolder).
@@ -284,14 +284,11 @@ If our work assists your research, feel free to give us a star ⭐ or cite us us
 }
 ```
 ```
-@misc{li2024xqganopensourceimagetokenization,
-      title={XQ-GAN: An Open-source Image Tokenization Framework for Autoregressive Generation}, 
-      author={Xiang Li and Kai Qiu and Hao Chen and Jason Kuen and Jiuxiang Gu and Jindong Wang and Zhe Lin and Bhiksha Raj},
-      year={2024},
-      eprint={2412.01762},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2412.01762}, 
+@article{li2024xq,
+  title={XQ-GAN: An Open-source Image Tokenization Framework for Autoregressive Generation},
+  author={Li, Xiang and Qiu, Kai and Chen, Hao and Kuen, Jason and Gu, Jiuxiang and Wang, Jindong and Lin, Zhe and Raj, Bhiksha},
+  journal={arXiv preprint arXiv:2412.01762},
+  year={2024}
 }
 ```
 ```
