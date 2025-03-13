@@ -8,14 +8,13 @@
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)]()&nbsp;
 
 </div>
-  </summary>
  <p align="center">
+ <div align=center>
+ 	<img src=assets/robusttok.png/>
+ </div>
+ </summary>
 
 </details>
-
-<div align=center>
-	<img src=assets/robusttok.png/>
-</div>
 
 <details>
   <summary>XQ-GAN🚀: An Open-source Image Tokenization Framework for Autoregressive Generation
@@ -25,13 +24,13 @@
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)](https://huggingface.co/qiuk6/XQ-GAN/tree/main)&nbsp;
 
 </div>
-  </summary>
  <p align="center">
-
-</details>
-<div align=center>
+ <div align=center>
 	<img src=assets/xqgan.png/>
 </div>
+</summary>
+
+</details>
 
 <details>
   <summary>ImageFolder🚀: Autoregressive Image Generation with Folded Tokens
@@ -41,13 +40,13 @@
 [![arXiv](https://img.shields.io/badge/arXiv%20paper-2410.01756-b31b1b.svg)](https://arxiv.org/abs/2410.01756)&nbsp;
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)](https://huggingface.co/ang9867/imagefolder/tree/main)&nbsp;
 </div>
-  </summary>
  <p align="center">
-
-</details>
-<div align=center>
+ <div align=center>
 	<img src=assets/teaser.png/>
 </div>
+</summary>
+
+</details>
 
 ## Updates
 - (2025.03.13) RobustTok initial code released.
@@ -57,7 +56,7 @@
 
 ## Features
 
-🚨🚨🚨 New (2025.03): We are supporting latent perturbation + pFID evaluation proposed in RobustTok!
+🚨🚨🚨 New (2025.03): We are supporting latent perturbation + pFID evaluation proposed in RobustTok! Refer to [perturbation.py](tokenizer/tokenizer_image/latent_perturbation.py).
 ```
 # Plug and play perturbation to improve your tokenizer‘s latent robustness
 import latent_perturbation as LP
@@ -117,9 +116,9 @@ We provide pre-trained tokenizers for image reconstruction on ImageNet, LAION-40
 
 | Training | Type | Codebook | Latent res. | rFID | pFID |                                 Link                                  | Config |
 | :------: | :--: | :-----------: | :---------: | :----: | :----: |:-------------------------------------------------------------------: | :----: |
-| ImageNet | V  |     4096      |   16x16    |  0.91  | 6.98 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/XQGAN-4096.pt?download=true)  | coming |
-| ImageNet | V  |     8192      |   16x16    |  0.81  | 7.91 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/XQGAN-8192.pt?download=true)  | coming |
-| ImageNet | VP+LP |     4096      |   16x16    |  1.02  | 2.28 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/RobustTok-zero.pt?download=true)  | coming |
+| ImageNet | V  |     4096      |   16x16    |  0.91  | 6.98 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/XQGAN-4096.pt?download=true)  | VQ-4096.yaml |
+| ImageNet | V  |     8192      |   16x16    |  0.81  | 7.91 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/XQGAN-8192.pt?download=true)  | VQ-8192.yaml |
+| ImageNet | VP+LP |     4096      |   16x16    |  1.02  | 2.28 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/RobustTok-zero.pt?download=true)  | RobustTok.yaml |
 | ImageNet | VP2  |     4096      |   16x16    |  0.90  | - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-4096/best_ckpt.pt?download=true)  | VP2-4096.yaml |
 | ImageNet | VP2  |     16384     |   16x16    |  0.64  | - | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/vq-16384/best_ckpt.pt?download=true) | VP2-16384.yaml |
 
