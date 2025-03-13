@@ -25,7 +25,7 @@
 ```
 accelerate launch scripts/train_rar.py experiment.project="rar" experiment.name="rar_b" experiment.output_dir="rar_b" model.generator.hidden_size=768 model.generator.num_hidden_layers=24 model.generator.num_attention_heads=16 model.generator.intermediate_size=3072 config=configs/generator/robustTok-rar.yaml dataset.params.pretokenization=/path/to/pretokenized.jsonl mode.vq_ckpt=/path/to/RobustTok.pt
 
-accelerate launch scripts/train_rar.py experiment.project="rar" experiment.name="rar_b" experiment.output_dir="rar_l" model.generator.hidden_size=1024 model.generator.num_hidden_layers=24 model.generator.num_attention_heads=16 model.generator.intermediate_size=4096 config=configs/generator/robustTok-rar.yaml dataset.params.pretokenization=/path/to/pretokenized.jsonl mode.vq_ckpt=/path/to/RobustTok.pt
+accelerate launch scripts/train_rar.py experiment.project="rar" experiment.name="rar_l" experiment.output_dir="rar_l" model.generator.hidden_size=1024 model.generator.num_hidden_layers=24 model.generator.num_attention_heads=16 model.generator.intermediate_size=4096 config=configs/generator/robustTok-rar.yaml dataset.params.pretokenization=/path/to/pretokenized.jsonl mode.vq_ckpt=/path/to/RobustTok.pt
 ```
 
 ## Visualization Result
