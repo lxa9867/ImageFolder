@@ -11,11 +11,11 @@
   </summary>
  <p align="center">
 
+</details>
+
 <div align=center>
 	<img src=assets/robusttok.png/>
 </div>
-
-</details>
 
 <details>
   <summary>XQ-GAN🚀: An Open-source Image Tokenization Framework for Autoregressive Generation
@@ -28,11 +28,10 @@
   </summary>
  <p align="center">
 
+</details>
 <div align=center>
 	<img src=assets/xqgan.png/>
 </div>
-
-</details>
 
 <details>
   <summary>ImageFolder🚀: Autoregressive Image Generation with Folded Tokens
@@ -45,11 +44,10 @@
   </summary>
  <p align="center">
 
+</details>
 <div align=center>
 	<img src=assets/teaser.png/>
 </div>
-
-</details>
 
 ## Updates
 - (2025.03.12) RobustTok initial code released. Generators and checkpoints will be released shortly.
@@ -224,6 +222,8 @@ start_drop: 3			     # quantizer dropout starts depth
 ```
 torchrun --nproc_per_node=8 tokenizer/tokenizer_image/linear_probing.py --config configs/msvq.yaml
 ```
+
+## Training code for RobustTok-RAR at [RobustTok-README](RobustTok-README.md)
 
 ## Training code for VAR (only support MSVRP now)
 
