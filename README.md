@@ -56,7 +56,7 @@
 
 ## Features
 
-🚨🚨🚨 New (2025.03): We are supporting latent perturbation + pFID evaluation proposed in RobustTok! Refer to [perturbation.py](tokenizer/tokenizer_image/latent_perturbation.py).
+🚨🚨🚨 New (2025.03): We are supporting latent perturbation + pFID evaluation proposed in RobustTok! Refer to [latent_perturbation.py](tokenizer/tokenizer_image/latent_perturbation.py).
 ```
 # Plug and play perturbation to improve your tokenizer‘s latent robustness
 import latent_perturbation as LP
