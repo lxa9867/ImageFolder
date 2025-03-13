@@ -8,11 +8,11 @@
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)]()&nbsp;
 
 </div>
+</summary>
  <p align="center">
  <div align=center>
  	<img src=assets/robusttok.png/>
  </div>
- </summary>
 
 </details>
 
@@ -24,11 +24,11 @@
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)](https://huggingface.co/qiuk6/XQ-GAN/tree/main)&nbsp;
 
 </div>
+</summary>
  <p align="center">
  <div align=center>
 	<img src=assets/xqgan.png/>
 </div>
-</summary>
 
 </details>
 
@@ -41,10 +41,10 @@
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)](https://huggingface.co/ang9867/imagefolder/tree/main)&nbsp;
 </div>
  <p align="center">
+</summary>
  <div align=center>
 	<img src=assets/teaser.png/>
 </div>
-</summary>
 
 </details>
 
