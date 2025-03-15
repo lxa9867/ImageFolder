@@ -6,7 +6,6 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv%20paper-2503.08354-b31b1b.svg)](https://arxiv.org/pdf/2503.08354)&nbsp;
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)]()&nbsp;
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/robust-latent-matters-boosting-image/image-generation-on-imagenet-256x256)](https://paperswithcode.com/sota/image-generation-on-imagenet-256x256?p=robust-latent-matters-boosting-image)&nbsp;
 
 </div>
 </summary>
