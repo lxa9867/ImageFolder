@@ -6,6 +6,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv%20paper-2503.08354-b31b1b.svg)](https://arxiv.org/pdf/2503.08354)&nbsp;
 [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)]()&nbsp;
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/robust-latent-matters-boosting-image/image-generation-on-imagenet-256x256)](https://paperswithcode.com/sota/image-generation-on-imagenet-256x256?p=robust-latent-matters-boosting-image)&nbsp;
 
 </div>
 </summary>
@@ -142,8 +143,8 @@ We provide a pre-trained generators for class-conditioned image generation using
 | Generator Type | Tokenizer  | Model Size | gFID |                                                   Link                                                    | 
 | :--: | :------: | :--------: | :----: | :-------------------------------------------------------------------------------------------------------: | 
 | VAR  | MSVR10P2 |    362M    |  2.60  | [Huggingface](https://huggingface.co/qiuk6/XQ-GAN/resolve/main/VAR-d17-MSVR10P2-4096/ar-ckpt-last.pth?download=true) |  
-| RAR | VP+LP | 261M | 1.83 | [Huggingface]() | 
-| RAR | VP+LP | 461M | 1.60 | [Huggingface]() | 
+| RAR | VP+LP | 261M | 1.83 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/rar-b.bin?download=true) | 
+| RAR | VP+LP | 461M | 1.60 | [Huggingface](https://huggingface.co/qiuk6/RobustTok/resolve/main/rar-l.bin?download=true) | 
 
 ## Installation
 
