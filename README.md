@@ -56,7 +56,8 @@
 
 ## Features
 
-🚨🚨🚨 New (2025.03): We are supporting latent perturbation + pFID evaluation proposed in RobustTok! Refer to [latent_perturbation.py](tokenizer/tokenizer_image/latent_perturbation.py).
+🚨🚨🚨 New (2025.03): We are supporting latent perturbation + pFID evaluation proposed in RobustTok! Refer to [latent_perturbation.py](tokenizer/tokenizer_image/latent_perturbation.py). 
+⚠️⚠️⚠️ Important: You may want to add the perturbation after calculating vq and commit losses, i.e., making the perturbation only affect rec, percep and gan losses.
 ```
 # Plug and play perturbation to improve your tokenizer‘s latent robustness
 import latent_perturbation as LP
