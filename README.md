@@ -294,7 +294,7 @@ If our work assists your research, feel free to give us a star ⭐ or cite us us
 ```
 ```
 @misc{qiu2025robustlatentmattersboosting,
-      title={Robust Latent Matters: Boosting Image Generation with Sampling Error}, 
+      title={Robust Latent Matters: Boosting Image Generation with Sampling Error Synthesis}, 
       author={Kai Qiu and Xiang Li and Jason Kuen and Hao Chen and Xiaohao Xu and Jiuxiang Gu and Yinyi Luo and Bhiksha Raj and Zhe Lin and Marios Savvides},
       year={2025},
       eprint={2503.08354},
