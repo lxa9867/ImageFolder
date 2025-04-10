@@ -383,7 +383,7 @@ class VQModel(nn.Module):
             f_list = f.chunk(chunks=self.product_quant, dim=2)
             f_list = [f.view(b, -1, int(sqrt(l // self.product_quant)), int(sqrt(l // self.product_quant))) for f in f_list]
             if len(self.v_patch_nums) == 1:
-                f_hats_list = [self.quantizes[i].f_to_idxBl_or_fhat(f, to_fhat=True) for i, f in enumerate(f_list)]
+                f_hats_list = [self.quantizes[i].f_to_idxBl_or_fhat(f, to_fhat=True, v_patch_nums=None) for i, f in enumerate(f_list)]
             else:
                 f_hats_list = [self.quantizes[i].f_to_idxBl_or_fhat(f, to_fhat=True, v_patch_nums=self.v_patch_nums) for i, f in enumerate(f_list)]
             f_hats = [self.post_quant_conv(torch.cat(f_hats, dim=1)) for f_hats in zip(*f_hats_list)]
