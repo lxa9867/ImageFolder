@@ -2,7 +2,7 @@
 #   taming-transformers: https://github.com/CompVis/taming-transformers
 #   maskgit: https://github.com/google-research/maskgit
 from dataclasses import dataclass, field
-from typing import List
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -431,6 +431,32 @@ class VQModel(nn.Module):
             f_hat = f_hat.flatten(2).permute(0, 2, 1)
         return self.decoder(f_hat).clamp_(-1, 1)
     
+    def img_to_idxBl(self, inp_img_no_grad: torch.Tensor,
+                     v_patch_nums: Optional[Sequence[Union[int, Tuple[int, int]]]] = None) -> List[torch.LongTensor]:  # return List[Bl]
+        h = self.encoder(inp_img_no_grad)
+        if self.enc_type == 'dinov2':
+            b, l, c = h.shape
+            if self.product_quant > 1:
+                assert int(sqrt(l // self.product_quant)) ** 2 * self.product_quant == l
+                h = h.view(b, l, 1, c)
+                h = h.permute(0, 3, 1, 2)
+            else:
+                assert int(sqrt(l)) ** 2 == l
+                h = h.view(b, int(sqrt(l)), int(sqrt(l)), c)
+                h = h.permute(0, 3, 1, 2)
+        h = self.quant_conv(h)
+        if self.product_quant > 1:
+            b, c, l, _ = h.shape
+            h_list = h.chunk(chunks=self.product_quant, dim=2)
+            quant_list = []
+            for i, h in enumerate(h_list):
+                h = h.view(b, -1, int(sqrt(l // self.product_quant)), int(sqrt(l // self.product_quant)))
+                quant = self.quantizes[i].f_to_idxBl_or_fhat(h, to_fhat=False, v_patch_nums=v_patch_nums)
+                quant_list.append(quant)
+            return quant_list
+        else:
+            return self.quantize.f_to_idxBl_or_fhat(h, to_fhat=False, v_patch_nums=v_patch_nums)
+
     def idxBl_to_var_input(self, gt_idx_Bl):
         if self.product_quant > 1:
             x_BLCv_wo_first_l_list = [self.quantizes[i].idxBl_to_var_input(gt_idx_Bl[i]) for i in range(self.product_quant)]
